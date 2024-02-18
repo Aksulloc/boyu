@@ -12,10 +12,10 @@
     <artifactId>services</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>payment</module>
         <module>basket</module>
         <module>catalog</module>
         <module>ordering</module>
+        <module>payment</module>
     </modules>
 
 
