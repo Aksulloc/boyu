@@ -13,23 +13,21 @@ public class CatalogIntegrationEventService implements IntegrationEventService {
     private final KafkaTemplate<String, IntegrationEvent> kafkaTemplate;
     private final String catalogTopic;
 
-    public CatalogIntegrationEventService(
-            EntityManager entityManager,
-            KafkaTemplate<String, IntegrationEvent> kafkaTemplate,
-            @Value("${spring.kafka.consumer.topic.catalog}") String catalogTopic
-    ) {
+    public CatalogIntegrationEventService(EntityManager entityManager, KafkaTemplate<String, IntegrationEvent> kafkaTemplate, @Value("${spring.kafka.consumer.topic.catalog}") String catalogTopic) {
         this.entityManager = entityManager;
         this.kafkaTemplate = kafkaTemplate;
         this.catalogTopic = catalogTopic;
     }
 
     @Override
-    public void SaveEventAndCatalogContextChanges(IntegrationEvent event) {
+    public void saveEventAndCatalogContextChanges(IntegrationEvent event) {
+        System.out.printf("----- ----- CatalogIntegrationEventService - Saving changes and integrationEvent: %s (%s)", event.getId(), event.getClass().getSimpleName());
         entityManager.getTransaction().commit();
     }
 
     @Override
-    public void PublishThroughEventBus(IntegrationEvent event) {
+    public void publishThroughEventBus(IntegrationEvent event) {
+        System.out.printf("----- ----- Publishing integration event: %s (%s)", event.getId(), event.getClass().getSimpleName());
         kafkaTemplate.send(catalogTopic, event);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 @RequestMapping("catalog")
 @RestController
@@ -53,6 +54,7 @@ public class CatalogController {
         return catalogBrandRepository.findAll();
     }
 
+    @Transactional
     @RequestMapping(method = RequestMethod.PUT, path = "items")
     public void updateProduct(@RequestBody CatalogItem productToUpdate) {
         catalogItemRepository.findById(productToUpdate.getId())
@@ -73,10 +75,10 @@ public class CatalogController {
                         );
 
                         // Achieving atomicity between original Catalog database operation and the IntegrationEventLog thanks to a local transaction
-                        integrationEventService.SaveEventAndCatalogContextChanges(priceChangedEvent);
+                        integrationEventService.saveEventAndCatalogContextChanges(priceChangedEvent);
 
                         // Publish through the Event Bus and mark the saved event as published
-                        integrationEventService.PublishThroughEventBus(priceChangedEvent);
+                        integrationEventService.publishThroughEventBus(priceChangedEvent);
                     } else {
                         entityManager.getTransaction().commit();
                     }

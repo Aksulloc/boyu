@@ -36,8 +36,8 @@ public class OrderStatusChangedToAwaitingValidationIntegrationEventHandler {
                 ? new OrderStockRejectedIntegrationEvent(event.getOrderId(), confirmedOrderStockItems)
                 : new OrderStockConfirmedIntegrationEvent(event.getOrderId());
 
-        integrationEventService.SaveEventAndCatalogContextChanges(confirmedIntegrationEvent);
-        integrationEventService.PublishThroughEventBus(confirmedIntegrationEvent);
+        integrationEventService.saveEventAndCatalogContextChanges(confirmedIntegrationEvent);
+        integrationEventService.publishThroughEventBus(confirmedIntegrationEvent);
         acknowledgment.acknowledge();
     }
 }
